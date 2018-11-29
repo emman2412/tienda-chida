@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}
+    {% if category %}{{ category.name }} {% else %} Productos {% endif %}
+{% endblock %}
+
+{% block content %}
+{% include 'products/includes/products_menu.html' %}
+   <div class="container">
+      <div class="row" style="margin-top: 1%">
+
+        <div class="col-sm-8 blog-main ">
+
+          <div class="blog-post">
+              <div class="row mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-md-10 text-center">
+                            <img src="{% if product.image %} {{ product.image.url }} {% else %} {% static 'img/default.jpg' %} {% endif %}" alt="..." style="height: 360px; width: auto">
+                        </div>
+                        <div class="col-md-12" style="padding-left: 20px">
+                            <h3>{{ product.name }}</h3>
+                            <h6><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></h6>
+                            <h5><a href="{{ product.trademark.get_absolute_url }}">{{ product.trademark }}</a></h5>
+                            <p class="text-muted">$ {{ product.price }}</p>
+                            <form action="{% url "cart:cart_add" product.id %}" method="post">
+                                {% csrf_token %}
+                                {{ cart_product_form}}
+                                <input type="submit" value="agregar al carrito" class="btn btn-primary">
+                            </form>
+                            <p>{{ product.description|safe|linebreaks }}</p>
+                            <br>
+                            {% if request.user.is_staff %}
+                                <a href="{% url 'products:update' product.id product.slug %}" class="btn btn-outline-warning">Editar</a>
+                                <a href="{% url 'products:delete' product.id product.slug %}" class="btn btn-outline-danger">Eliminar</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+              </div>
+
+
+          </div><!-- /.blog-post -->
+
+        </div><!-- /.blog-main -->
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Crear producto{% endblock %}
+{% block content %}
+{% include 'products/includes/products_menu.html'%}
+<main role="main">
+  <div class="container">
+    <div class="row mt-3 mb-5">
+      <div class="col-md-9 mx-auto">
+          <form action="" method="post" enctype="multipart/form-data">{% csrf_token %} 
+            <table>
+                {{ form.as_p }}
+            </table>
+            <div class="text-center">
+              <input type="submit" value="Crear producto" class="btn btn-outline-success btn-block"/>
+          </form>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

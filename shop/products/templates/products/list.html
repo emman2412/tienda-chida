@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}
+    {% if category %}{{ category.name }} {% else %} Productos {% endif %}
+{% endblock %}
+
+{% block content %}
+{% include 'products/includes/products_menu.html' %}
+   <div class="container mb-4">
+      <div class="row" style="margin-top: 2%">
+
+        <div class="col-sm-9 blog-main">
+          <div class="blog-post">
+              <div class="row">
+                  {% for product in products %}
+                      <div class="col-md-4">
+                        <div class="thumbnail">
+                            <div class="card">
+                                <div class="card-body">
+                                    <a href="{{ product.get_absolute_url }}">
+                                        <center>
+                                            <img src="{% if product.image %} {{ product.image.url }} {% else %} {% static 'img/default.jpg' %} {% endif %}" alt="..." style="height: 130px; width: auto">
+                                        <center/>
+                                    </a>
+                                    <div class="caption">
+                                        <h5 class="text-center">
+                                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                                        </h5>
+                                        <p class="text-center">$ {{ product.price }}</p>
+                                        {% if request.user.is_staff %}
+                                            <a href="{% url 'products:update' product.id product.slug %}" class="btn btn-outline-warning">Editar</a>
+                                            <a href="{% url 'products:delete' product.id product.slug %}" class="btn btn-outline-danger">Eliminar</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                      </div>
+                  {% endfor %}
+              </div>
+
+
+          </div><!-- /.blog-post -->
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar" ALIGN=RIGHT>
+          <div class="sidebar-module">
+            <div class="dropdown">
+                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown">
+                    Ordenar por
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'products:order_name' %}">Nombre</a>
+                    <a class="dropdown-item" href="{% url 'products:order_price' %}">Precio</a>
+                </div>
+            </div><br><br>
+            <h4>Categorías</h4>
+            <ol class="list-unstyled">
+              <li {% if not category %} class="active"{% endif %}><a href="{% url 'products:product_list' %}">Todo</a></li>
+            {% for c in categories %}
+              <li {% if category.slug == c.slug %} class="active"{% endif %}>
+                  <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+              </li>
+            {% endfor %}
+            </ol><br>
+            <!--<h4>Marcas</h4>
+            <ol class="list-unstyled">
+              <li {% if not category %} class="active"{% endif %}><a href="{% url 'products:product_list' %}">Todo</a></li>
+            {% for c in trademarks %}
+              <li {% if trademark.slug == c.slug %} class="active"{% endif %}>
+                  <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+              </li>
+            {% endfor %}
+            </ol>-->
+          </div>
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+{% endblock %}
